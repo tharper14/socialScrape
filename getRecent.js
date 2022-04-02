@@ -3,7 +3,7 @@ const fs = require('fs')
 
 let liveChatLinks = [];
 
-var logger = fs.createWriteStream('log.txt', {
+var logger = fs.createWriteStream('liveChat.txt', {
     flags: 'a' // 'a' means appending (old data will be preserved)
   })
 var writeLine = (line) => logger.write(`\n${line}`);

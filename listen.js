@@ -2,7 +2,7 @@ const imessage = require('osa-imessage')
 const fs = require('fs')
 
 
-var logger = fs.createWriteStream('liveChat.txt', {
+var logger = fs.createWriteStream('file.txt', {
     flags: 'a' // 'a' means appending (old data will be preserved)
   })
 var writeLine = (line) => logger.write(`\n${line}`);        // writes new link to new line in txt file

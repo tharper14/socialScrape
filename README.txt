@@ -6,4 +6,12 @@
 6. Fill out text file properly; 1 link per line, no blank lines, hit save
 7. Index.js is the starting point for this script, to run script, just type “node index” in the terminal and hit enter. 
 
+
+
+To Run Listen you just need to type node Listen in the terminal while in this project folder 
+- It is currently set up for listening to only tiktok links coming from any chat in your phone
+- You need to run listen and watch the console log for texts coming in, you need to identify the chat number which is shown in "group:" in each text object that shows up
+- You need to uncomment out line 14 in listen.js, (erase the //), and correct the chat# - this makes it only listen to the chat you want 
+- When using listen, you cannot run download tool, you have to "stop" listening by pressing Ctrl + c 
+- Work in progress still
 Ctrl + C will abort the loop if you want to stop it 
