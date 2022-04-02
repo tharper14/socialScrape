@@ -69,9 +69,9 @@ console.log("************************************ \n****************************
 if (failedShorten.length != 0){
     console.log(`WARNING: Download(s): #` + failedShorten.toString()+ ` was not named correctly`);} //log which links did not download properly
 if (failedStrip.length != 0){
-    console.log(`WARNING: Downloads:` + failedStrip.toString()+ ` did not strip`);}
+    console.log(`WARNING: Download(s):` + failedStrip.toString()+ ` did not strip`);}
 if (failedDownload.length != 0){
-    console.log(`WARNING: Downloads:` + failedDownload.toString()+ ` did not download`);}
+    console.log(`WARNING: Download(s):` + failedDownload.toString()+ ` did not download`);}
 if (failedDownload.length===0 && failedShorten.length===0 && failedDownload.length===0)
 {
     console.log(".............NO ERRORS..............");
