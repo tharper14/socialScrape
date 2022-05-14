@@ -10,9 +10,11 @@
   "license": "ISC",
   "dependencies": {
     "easy-instagram-post-downloader": "^1.0.5",
+    "handbrake-js": "^6.0.0",
     "nodejs-file-downloader": "github:tharper14/nodejs-file-downloader",
     "osa-imessage": "^2.4.2",
     "tiktok-scraper-without-watermark": "github:tharper14/Tiktok-Scraper-Without-Watermark",
-    "unshorten.it": "^1.0.0"
+    "unshorten.it": "^1.0.0",
+    "user-instagram": "^3.0.1"
   }
 }
