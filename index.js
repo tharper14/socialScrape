@@ -154,7 +154,7 @@ async function stripDownload() {                                                
         console.log(`WARNING: Download(s):` + failedStrip.toString()+ ` did not strip`);}
     if (failedDownload.length != 0){
         console.log(`WARNING: Download(s):` + failedDownload.toString()+ ` did not download`);}
-    if (failedDownload.length != 0){
+    if (failedEncode.length != 0){
             console.log(`WARNING: Download(s):` + failedEncode.toString()+ ` did not encode`);}
     if (failedStrip.length===0 && failedShorten.length===0 && failedDownload.length===0 && failedEncode.length===0)
     {
