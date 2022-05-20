@@ -70,12 +70,12 @@ async function stripDownload() {                                                
         else if (url.indexOf("tiktok") !== -1) {
 
           //USERNAME EXTRACTOR_________________________________________________________________Get Username for filenaming
-                if (url.indexOf("https://www.tiktok.com/") !== -1){                            //regular link (not vm)
+                if (url.indexOf("https://www.tiktok.com/@") !== -1){                            //regular link (not vm)
                     let short = url.substring(24)                                              //strip the first 24 characters off static link (https://www.tiktok.com.@)
                     username = short.substring(0, short.indexOf('/'))                          //strip everything after the first /, set as username variable
                     console.log("Username #" + i + " Pulled") 
                 }
-                else {                                                                         // else = mobile link (vm.tiktok)
+                else if (url.indexOf("https://vm.tiktok.com") !== -1){                                                                         // else = mobile link (vm.tiktok)
                     try {
                         let long_url = await unshortener(url)                                  //unshorten mobile short link to get username
                         let short = long_url.substring(24)                                     //strip the first 24 characters off static link (https://www.tiktok.com.@)
@@ -88,6 +88,24 @@ async function stripDownload() {                                                
                             username = "RENAMETHISCLIP_" + failedClip
                             failedShorten.push(i);}     
                 }
+                else if (url.indexOf("https://www.tiktok.com/t/") !== -1){
+                    try {
+                        let long_url = await unshortener(url)                                  //unshorten mobile short link to get username
+                        console.log(long_url)
+                        let short = long_url.substring(24)                                     //strip the first 24 characters off static link (https://www.tiktok.com.@)
+                        username = short.substring(0, short.indexOf('/'))                      //strip everything after the first /, set as username variable
+                        console.log("Username #" + i + " Pulled") 
+                    } catch {
+                            console.log("URL #" + i + "could not be shortened")                //throw error message if shorten fails
+                            let failedLink = url.substring(22)
+                            let failedClip = failedLink.substring(0, failedLink.indexOf('/')); // naming clip link id alerting to find username
+                            username = "RENAMETHISCLIP_" + failedClip
+                            failedShorten.push(i);}     
+                }
+                else {
+                    username = "undefined"
+                }
+
 
           //FileProcessor____________________________________________________________________
                 var fileProcessorHH = new FileProcessorHH({fileName: username + '.mp4', path: downloadFolder});
