@@ -80,7 +80,7 @@ async function stripDownload() {                                                
     for (let i = 1; i < textByLine.length+1; i++) {                                        //loop through array with links
         
         url = textByLine[i-1] 
-        console.log(`this link is:${url}:`)
+        //console.log(`this link is:${url}:`)
         //console.log(masterLogPath)
         
 
@@ -97,7 +97,7 @@ async function stripDownload() {                                                
         //     }
         //     else { duplicate = false; }
         // });
-        console.log(duplicate)
+        //console.log(duplicate)
       //Instagram DOWNLOADER - IN PROGRESS
         if (url.indexOf("instagram.com") !== -1) {
                 console.log('IG Link');
