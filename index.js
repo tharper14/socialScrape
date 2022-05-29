@@ -80,13 +80,13 @@ async function stripDownload() {                                                
     for (let i = 1; i < textByLine.length+1; i++) {                                        //loop through array with links
         
         url = textByLine[i-1] 
-        //console.log(`this link is:${url}:`)
+        console.log(`this link is:${url}:`)
         //console.log(masterLogPath)
         
 
        if(checkIfContainsSync(masterLogPath, url)) {
            duplicate = true;
-       }
+       } else {duplicate = false;}
         // fs.readFile(masterLogPath, function (err, data) {
         //     if (err)
         //         throw err;
@@ -97,7 +97,7 @@ async function stripDownload() {                                                
         //     }
         //     else { duplicate = false; }
         // });
-        //console.log(duplicate)
+        console.log(duplicate)
       //Instagram DOWNLOADER - IN PROGRESS
         if (url.indexOf("instagram.com") !== -1) {
                 console.log('IG Link');
@@ -109,7 +109,7 @@ async function stripDownload() {                                                
 
         
       //TIKTOK FULL DOWNLOADER
-        else if (url.indexOf("tiktok") !== -1 && duplicate == false) {  //
+        else if (url.indexOf("tiktok") !== -1 && duplicate === false) {  //
 
           //USERNAME EXTRACTOR_________________________________________________________________Get Username for filenaming
                 if (url.indexOf("https://www.tiktok.com/@") !== -1){                            //regular link (not vm)
@@ -168,7 +168,7 @@ async function stripDownload() {                                                
                         failedStrip.push(i)
                         stripFlag = false
                         //checkAndAdd('./failedLinks.txt', url)
-                        if(checkIfContainsSync('./failedLinks.txt', url)) {
+                        if(checkIfContainsSync('./failedLinks.txt', url)==false) {
                             writeFailed(url)
                         }
                     }                                                        
@@ -186,38 +186,40 @@ async function stripDownload() {                                                
                     console.log("Download #" + i +" Complete")
                     //completedDownloads.push(fileName);
                     downloadFlag = true;
+                    writeSuccessLog(url);
 
                 } catch(error){
+                            if(checkIfContainsSync('./failedLinks.txt', url)==false) {writeFailed(url)}
                             console.log("Download #" +i+ " failed", error)                     //error is thrown in case of network errors, or status codes of 400 and above.
                             failedDownload.push(i)
-                            if(checkIfContainsSync('./failedLinks.txt', url)) {
-                                writeFailed(url)}
+                            
+                                
                             downloadFlag = false;}                                             //Note that if the maxAttempts is set to higher than 1, the error is thrown only if all attempts fail.
 
                 }
     
           //HANDBRAKE ENCODING_________________________________________________________________encoded freshly downloaded video into different folder
-            if (downloadFlag === true)  {
-                    let options = {
-                        input: `${downloadFolder}/${completeFileName}`,
-                        output: `${encodedFolder}/${completeFileName}`,
-                        preset: 'Fast 1080p30'};
+            // if (downloadFlag === true)  {
+            //         let options = {
+            //             input: `${downloadFolder}/${completeFileName}`,
+            //             output: `${encodedFolder}/${completeFileName}`,
+            //             preset: 'Fast 1080p30'};
 
-                    try  {
-                        let result = await hbjs.run(options)
-                        console.log("Encoding #" + i + " COMPLETE\n************************************")
-                        //checkAndAdd(masterLogPath, url)
-                        downloadFlag = false;
-                        //console.log(result)
-                        writeSuccessLog(url);
+            //         try  {
+            //             let result = await hbjs.run(options)
+            //             console.log("Encoding #" + i + " COMPLETE\n************************************")
+            //             //checkAndAdd(masterLogPath, url)
+            //             downloadFlag = false;
+            //             //console.log(result)
+            //             writeSuccessLog(url);
 
-                    }  catch {
-                            console.log("Error encoding video: " + i)
-                            failedEncode.push(i)} 
-            }                                              
+            //         }  catch {
+            //                 console.log("Error encoding video: " + i)
+            //                 failedEncode.push(i)} 
+            // }                                              
         }
         else {
-            if (duplicate == true){
+            if (duplicate === true){
                 console.log("Link #" + i + " is a duplicate")
                 duplicateLinks.push(i);
             }
