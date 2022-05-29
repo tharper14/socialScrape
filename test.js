@@ -1,49 +1,17 @@
 
-let url = 'https://vm.tiktok.com/TTPdrCsRbR/'
-let failedLink = url.substring(22)
-                let failedClip = failedLink.substring(0, failedLink.indexOf('/'));
-
-               let username = "RENAMETHISCLIP_" + failedClip
-
-               console.log(username);
 
 
 
 
 
 
+// let url = 'https://vm.tiktok.com/TTPdrCsRbR/'
+// let failedLink = url.substring(22)
+//                 let failedClip = failedLink.substring(0, failedLink.indexOf('/'));
 
+//                let username = "RENAMETHISCLIP_" + failedClip
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//                console.log(username);
 
 
 

@@ -4,7 +4,8 @@
   "description": "Strip and download TikTok Clips Automatically",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rebuild": "electron-rebuild -f -w sqlite3"
   },
   "author": "Tyler Harper",
   "license": "ISC",
@@ -13,6 +14,7 @@
     "handbrake-js": "^6.0.0",
     "nodejs-file-downloader": "github:tharper14/nodejs-file-downloader",
     "osa-imessage": "^2.4.2",
+    "sqlite3": "^4.2.0",
     "tiktok-scraper-without-watermark": "github:tharper14/Tiktok-Scraper-Without-Watermark",
     "unshorten.it": "^1.0.0",
     "user-instagram": "^3.0.1"
