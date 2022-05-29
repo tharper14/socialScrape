@@ -122,7 +122,7 @@ async function stripDownload() {                                                
                         let long_url = await unshortener(url)                                  //unshorten mobile short link to get username
                         let short = long_url.substring(24)                                     //strip the first 24 characters off static link (https://www.tiktok.com.@)
                         username = short.substring(0, short.indexOf('/'))                      //strip everything after the first /, set as username variable
-                        console.log(username)
+                        //console.log(username)
                         console.log("Username #" + i + " Pulled") 
                     } catch {
                             console.log("URL #" + i + "could not be shortened")                //throw error message if shorten fails
@@ -186,7 +186,7 @@ async function stripDownload() {                                                
                     console.log("Download #" + i +" Complete")
                     //completedDownloads.push(fileName);
                     downloadFlag = true;
-                    writeSuccessLog(url);
+                    //writeSuccessLog(url);
 
                 } catch(error){
                             if(checkIfContainsSync('./failedLinks.txt', url)==false) {writeFailed(url)}
@@ -199,24 +199,24 @@ async function stripDownload() {                                                
                 }
     
           //HANDBRAKE ENCODING_________________________________________________________________encoded freshly downloaded video into different folder
-            // if (downloadFlag === true)  {
-            //         let options = {
-            //             input: `${downloadFolder}/${completeFileName}`,
-            //             output: `${encodedFolder}/${completeFileName}`,
-            //             preset: 'Fast 1080p30'};
+            if (downloadFlag === true)  {
+                    let options = {
+                        input: `${downloadFolder}/${completeFileName}`,
+                        output: `${encodedFolder}/${completeFileName}`,
+                        preset: 'Fast 1080p30'};
 
-            //         try  {
-            //             let result = await hbjs.run(options)
-            //             console.log("Encoding #" + i + " COMPLETE\n************************************")
-            //             //checkAndAdd(masterLogPath, url)
-            //             downloadFlag = false;
-            //             //console.log(result)
-            //             writeSuccessLog(url);
+                    try  {
+                        let result = await hbjs.run(options)
+                        console.log("Encoding #" + i + " COMPLETE\n************************************")
+                        //checkAndAdd(masterLogPath, url)
+                        downloadFlag = false;
+                        //console.log(result)
+                        writeSuccessLog(url);
 
-            //         }  catch {
-            //                 console.log("Error encoding video: " + i)
-            //                 failedEncode.push(i)} 
-            // }                                              
+                    }  catch {
+                            console.log("Error encoding video: " + i)
+                            failedEncode.push(i)} 
+            }                                              
         }
         else {
             if (duplicate === true){
