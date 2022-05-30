@@ -58,6 +58,9 @@ let failedRetry = []
 let successRetry = []
 let chatScrapeArray= []
 let invalidLinks = []
+let alreadyLogged = []
+let alreadyLoaded = []
+let addedFromChatScrape = []
 let url = ''
 let strippedurl = ''
 let username = ''
@@ -94,30 +97,42 @@ if (addChatLinks){
         flags: 'a'})
     var appendFromChat = (line) => appendLinks.write(`\n${line}`);
 
-    for (let i = 0; i < chatScrapeArrayRaw.length; i++) {
+    for (let i = 1; i < chatScrapeArrayRaw.length+1; i++) {
 
-        let chatLink = chatScrapeArrayRaw[i];
+        let chatLink = chatScrapeArrayRaw[i-1];
+        //console.log(chatLink)
         //if link #i in chatScrapeArrayRaw does not exist in file.txt or success log, or already in chatScrapeArray, add to chatScrapeArray and add to file.txt
         if(checkIfContainsSync(linksList, chatLink)==false && checkIfContainsSync(masterLogPath, chatLink)==false && chatScrapeArray.includes(chatScrapeArrayRaw[i])==false){
-            chatScrapeArray.push(chatLink)
-            appendFromChat(chatLink)
-            console.log(`Link #${i+1} from chatScrape has been added to ${linksList}`);
+            chatScrapeArray.push(chatLink) //the important part, 
+            addedFromChatScrape.push(i) //saving indices from successful adds for report at the end
+            appendFromChat(chatLink) //adds link to file.txt -more for visual confirmation, code uses chatScrapeArray
+            //console.log(`Link #${i} from chatScrape has been added to ${linksList}`);
         }
-        if(checkIfContainsSync(masterLogPath, chatLink)==true){
-            console.log(`Chat Link #${i+1} is already downlownloaded`)
+        if(checkIfContainsSync(masterLogPath, chatLink)==true && chatLink!=''){
+            alreadyLogged.push(i)
+           
         } 
-        if(checkIfContainsSync(linksList, chatLink)==true && checkIfContainsSync(masterLogPath, chatLink)==false){
-            console.log(`Chat Link #${i+1} is already in ${linksList}`)
+        if(checkIfContainsSync(linksList, chatLink)==true && chatLink!='' /*&& checkIfContainsSync(masterLogPath, chatLink)==false*/){
+            alreadyLoaded.push(i);
+            //console.log(`Chat Link #${i} is already in ${linksList}`)
         }  
     }
-    // console.log("Filtered ChatScrapes")
-    // console.log(chatScrapeArray)
-
+     //console.log("\n")
+     //console.log(chatScrapeArray)
    
-    
+    if(alreadyLogged.length !=0){
+        console.log(`Link(s) #${alreadyLogged.toString()} from chatScrape have been downloaded in the past`.blue)}
+        
+    if(alreadyLoaded.length !=0){
+        console.log(`Link(s) #${alreadyLoaded.toString()} from chatScrape already loaded`.blue)}
+    if (chatScrapeArray.length == 0){
+            console.log("No Chat links were added...\n".blue)
+        }
+    if(chatScrapeArray.length !=0){
+        console.log(`Link(s) #${addedFromChatScrape.toString()} added from chatScrape\n`.green)
+    }
 }
-
-stripDownload(linksList);
+stripDownload(linksList); //main process
 
 
 //---------------------------------------------------------------------
@@ -134,7 +149,7 @@ async function stripDownload(linksPath) {
     let textByLine = fileByLine.concat(chatScrapeArray)
     //console.log(textByLine)
     //console.log(textByLine.length)
-
+    console.log(`Process Starting...`)
     //Loop thru text file line by line
     for (let i = 1; i < textByLine.length+1; i++) {    
 
@@ -142,10 +157,9 @@ async function stripDownload(linksPath) {
         url = textByLine[i-1] 
        
         //console.log(masterLogPath)
-        console.log("************************************")
-    //    if(url == ''){
-    //     duplicate=false;
-    //    }
+        // console.log("************************************")
+        //console.log('\n')
+
        if( checkLog==true && checkIfContainsSync(masterLogPath, url) || url == '') {
            duplicate = true;
        }
@@ -221,8 +235,8 @@ async function stripDownload(linksPath) {
                         if(checkIfContainsSync('./failedLinks.txt', url)==false) {
                             writeFailed(url)  
                         }
-                        let failedInstance = {link:url, cfn:completeFileName, number:i}
-                            failedLinks.push(failedInstance);
+                        let failedInstance = {link:url, usr:username, cfn:completeFileName, number:i}
+                        failedLinks.push(failedInstance);
 
                     }                                                        
 
@@ -245,7 +259,7 @@ async function stripDownload(linksPath) {
                             if(checkIfContainsSync('./failedLinks.txt', url)==false) {writeFailed(url)}
                            // failedLinks.push(url)  //for failed retry
                             failedDownload.push(i) //for error log
-                            let failedInstance = {link:url, cfn:completeFileName, number:i}
+                            let failedInstance = {link:url, usr:username, cfn:completeFileName, number:i}
                             failedLinks.push(failedInstance);
                             //console.log(failedLinks)
                            
@@ -282,8 +296,8 @@ async function stripDownload(linksPath) {
         }
         //Duplicate Link Catcher
         else {
-            if (url.length < 2){
-                //console.log("Line #" + i + " is blank")
+            if (url ==''){
+                console.log("Line #" + i + " is blank")
                 }
             else if (duplicate === true){
                 //console.log('\x1b[33m%s\x1b[0m',"************************************")
@@ -316,7 +330,7 @@ async function stripDownload(linksPath) {
             //console.log(url)
 
           //FileProcessor Retry____________________________________________________________________
-           var fileProcessorHH = new FileProcessorHH({fileName: username + '.mp4', path: downloadFolder});
+           var fileProcessorHH = new FileProcessorHH({fileName: failedLinks[j].usr + '.mp4', path: downloadFolder});
               try{
                  completeFileName = await fileProcessorHH.getAvailableFileName();
               // console.log(completeFileName)
@@ -420,7 +434,7 @@ async function stripDownload(linksPath) {
     if (invalidLinks.length != 0){
             console.log(`WARNING:`.yellow +`  Invalid Links(s): ` + invalidLinks.toString());}
             
-    if (failedStrip.length===0 && failedShorten.length===0 && failedDownload.length===0 && failedEncode.length===0 && duplicateLinks.length===0 && invalidLinks===0)
+    if (failedStrip.length===0 && failedShorten.length===0 && failedDownload.length===0 && failedEncode.length===0 && duplicateLinks.length===0 && invalidLinks.length===0)
     {
         console.log("************************************".brightGreen);
         console.log(".............NO ERRORS..............".brightGreen.bold)
