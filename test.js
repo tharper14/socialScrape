@@ -1,3 +1,27 @@
+var colors = require('colors');
+
+console.log("------------------------------------ \n            END OF LIST             \n____________________________________\n".cyan)
+const person = [
+    {
+      firstName: "John",
+      lastName: "Doe",
+      age: 50,
+      eyeColor: "blue"},
+      {
+      firstName: "Ted",
+      lastName: "Smith",
+      age: 37,
+      eyeColor: "green"},
+      
+    ];
+
+
+    const numbers = [2,4,0,7]
+
+    // console.log(`WARNING: Link(s): #` + person.toString().person+ ` failed to download`);
+    console.log(`WARNING: Link(s): #` + numbers.toString()+ ` failed to download`.rainbow);
+    console.log(`WARNING: Link(s): #` + numbers[1]+ ` failed to download`.magenta);
+ console.log(`Today is the ${numbers[0]} day`.magenta)
 
 
 
@@ -5,6 +29,10 @@
 
 
 
+
+
+
+ 
 // let url = 'https://vm.tiktok.com/TTPdrCsRbR/'
 // let failedLink = url.substring(22)
 //                 let failedClip = failedLink.substring(0, failedLink.indexOf('/'));

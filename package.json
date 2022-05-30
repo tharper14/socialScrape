@@ -10,6 +10,8 @@
   "author": "Tyler Harper",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^5.0.1",
+    "colors": "^1.4.0",
     "easy-instagram-post-downloader": "^1.0.5",
     "handbrake-js": "^6.0.0",
     "nodejs-file-downloader": "github:tharper14/nodejs-file-downloader",
