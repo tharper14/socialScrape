@@ -23,10 +23,10 @@ const downloadFolder = './downloads';
 const encodedFolder ='./encodedDownloadsReady/' 
 //---------------------------------------------------------------------
 //-------------------------SET MASTER LOG LOCATION HERE----------------
-const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/Social Scrape/testLog.txt`
+const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/Tylers Tests/masterCompletedLog.txt`
 //---------------------------------------------------------------------
 //-------------------------SET CHATSCRAPE LOCATION HERE----------------
-const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/Social Scrape/chatScrape.txt`
+const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/Tylers Tests/testLinks.txt`
 //---------------------------------------------------------------------
 //-------------------------SET LOCAL LINKS LOCATION HERE---------------
 const linksList = "./file.txt"
@@ -336,13 +336,18 @@ async function stripDownload(linksPath) {
               // console.log(completeFileName)
               } catch {
                   console.log(colors.red("Failed File Processing on link #" + failedLinks[j].number))
+                  console.log(colors.red("Contact Tyler, this isnt ready/expected to happen"))
                 }
                  
           //TIKTOK STRIPPER Retry____________________________________________________________________acquires raw video url from TikTok
                 try {
                     strippedurl = await tiktok.tiktokdownload(url)                             //run stripping function that returns stripped url link
                     stripFlag = true;
-                    console.log("Stripped #" + failedLinks[j].number + " SUCCESS".green)           
+                    console.log("Stripped #" + failedLinks[j].number + " SUCCESS".green)
+                    let fixIndex = failedStrip.indexOf(failedLinks[j].number) //what index in failed array is this original link # (i) located at
+                    if (fixIndex !==-1) {                                        //if index exists..
+                        failedStrip.splice(fixIndex);                        //remove that link -since its now good
+                    }           
                 } catch (e) {   
                         console.log("Stripped #" +failedLinks[j].number+ " FAILED!!".red)
                         console.log("Download #" +failedLinks[j].number+ " ABORTED!!".red)
@@ -367,6 +372,10 @@ async function stripDownload(linksPath) {
                     //completedDownloads.push(fileName);
                     downloadFlag = true;
                     //writeSuccessLog(url);
+                    let fixIndex = failedDownload.indexOf(failedLinks[j].number) //what index in failed array is this original link # (i) located at
+                    if (fixIndex !==-1) {                                        //if index exists..
+                        failedDownload.splice(fixIndex);                        //remove that link -since its now good
+                    }
 
                 } catch(error){
                             if(checkIfContainsSync('./failedLinks.txt', url)==false) {writeFailed(url)}
@@ -393,7 +402,10 @@ async function stripDownload(linksPath) {
                         downloadFlag = false;
                         //console.log(result)
                         writeSuccessLog(url);
-
+                        let fixIndex = failedEncode.indexOf(failedLinks[j].number) //what index in failed array is this original link # (i) located at
+                        if (fixIndex !==-1) {                                        //if index exists..
+                            failedEncode.splice(fixIndex);                        //remove that link -since its now good
+                        }
                     }  catch {
                             console.log("Encoding " + failedLinks[j].number + "FAILED".red)
                             failedEncode.push(i)
