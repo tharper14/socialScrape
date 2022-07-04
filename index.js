@@ -10,31 +10,29 @@
 // ░█─░█ ▀──▀ ▀─▀▀ █▀▀▀ ▀▀▀ ▀─▀▀ ▀▀▀ ░█─░█ ▀──▀ ▀▀▀ ▀─▀ ▀▀▀🅛🅛🅒
 //_______________________________________________________________________________________________
 
-
-
-
-
 const yourUsername = 'tylerharper';
+const dropBoxFolder = '_socialScrape'
+const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
+const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrape.txt`
 //---------------------------------------------------------------------
-//-------------------------SET DOWNLOAD FILE LOCATION HERE-------------
-const downloadFolder = './downloads';    
-//---------------------------------------------------------------------
-//-------------------------SET ENCODING FILE LOCATION HERE-------------
-const encodedFolder ='./encodedDownloadsReady/' 
-//---------------------------------------------------------------------
-//-------------------------SET MASTER LOG LOCATION HERE----------------
-const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/Tylers Tests/masterCompletedLog.txt`
-//---------------------------------------------------------------------
-//-------------------------SET CHATSCRAPE LOCATION HERE----------------
-const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/Tylers Tests/testLinks.txt`
-//---------------------------------------------------------------------
-//-------------------------SET LOCAL LINKS LOCATION HERE---------------
-const linksList = "./file.txt"
+let addChatLinks = false
+//TURN ON/OFF adding ChatScrape Links to list -> false does not check/add links from chatScrape.txt
+let checkLog = false   
+//TURN ON/OFF checking against successLog -> false will download videos no matter what
+let addLog = false  
+//TURN ON/OFF adding successful downloads to successLog -> false will not keep record of successful links
+
 //---------------------------------------------------------------------
 
-let addChatLinks = true; //TURN ON/OFF adding ChatScrape Links to list -> false does not check/add links from chatScrape.txt
-let checkLog = true;     //TURN ON/OFF checking against successLog -> false will download videos no matter what
-let addLog = true;       //TURN ON/OFF adding successful downloads to successLog -> false will not keep record of successful links
+const linksList = "./links.txt"
+const downloadFolder = './utilities/stripDownloads'    
+const encodedFolder ='./_finalDownloads' 
+const failedFolder = './utilities/failedLinks.txt'
+
+
+//---------------------------------------------------------------------
+
+
 
 //initializing all dependency packages
 const tiktok = require('tiktok-scraper-without-watermark')  
@@ -44,7 +42,7 @@ let fs = require('fs');
 const {readFileSync, promises: fsPromises} = require('fs');
 const instagram = require('user-instagram');
 const hbjs = require('handbrake-js')
-const FileProcessorHH = require('./fileProcessorHH');
+const FileProcessorHH = require('./utilities/fileProcessorHH');
 var colors = require('colors');
 
 //let completedDownloads = []
@@ -71,7 +69,7 @@ let completeFileName = ''
 // let textByLine = text.split('\n')                                                          //'textByLine' is array with each link from text file
 let duplicate = false;
 
-var failedWrite = fs.createWriteStream('./failedLinks.txt', {                              //create write stream and write function for failed links, a=append
+var failedWrite = fs.createWriteStream(failedFolder, {                              //create write stream and write function for failed links, a=append
     flags: 'a'})
 var writeFailed = (line) => failedWrite.write(`\n${line}`);                                
 
@@ -256,7 +254,7 @@ async function stripDownload(linksPath) {
                     //writeSuccessLog(url);
 
                 } catch(error){
-                            if(checkIfContainsSync('./failedLinks.txt', url)==false) {writeFailed(url)}
+                            if(checkIfContainsSync(failedFolder, url)==false) {writeFailed(url)}
                            // failedLinks.push(url)  //for failed retry
                             failedDownload.push(i) //for error log
                             let failedInstance = {link:url, usr:username, cfn:completeFileName, number:i}
@@ -277,7 +275,7 @@ async function stripDownload(linksPath) {
                     let options = {
                         input: `${downloadFolder}/${completeFileName}`,
                         output: `${encodedFolder}/${completeFileName}`,
-                        preset: 'Fast 1080p30'};
+                        preset: 'HQ 1080p30 Surround'};
 
                     try  {
                         let result = await hbjs.run(options)
@@ -308,7 +306,7 @@ async function stripDownload(linksPath) {
             else{
             console.log("Link #" + i + " is not a valid link\n".red)
             invalidLinks.push(i)
-            if(checkIfContainsSync('./failedLinks.txt', url)==false) {writeFailed(url)};
+            if(checkIfContainsSync(failedFolder, url)==false) {writeFailed(url)};
             }
         }
     }//end of looping thru links in text file
@@ -378,7 +376,7 @@ async function stripDownload(linksPath) {
                     }
 
                 } catch(error){
-                            if(checkIfContainsSync('./failedLinks.txt', url)==false) {writeFailed(url)}
+                            if(checkIfContainsSync(failedFolder, url)==false) {writeFailed(url)}
                             failedRetry.push(failedLinks[j].number)
                             
                             console.log("Download #" +failedLinks[j].number+ " FAILED!!".red/*,error*/)             //error is thrown in case of network errors, or status codes of 400 and above.
