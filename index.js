@@ -65,8 +65,6 @@ let username = ''
 let downloadFlag = false;
 let stripFlag = false;
 let completeFileName = ''
-// let text = fs.readFileSync("./file.txt", 'utf-8');                                         //convert .txt file to array with each line
-// let textByLine = text.split('\n')                                                          //'textByLine' is array with each link from text file
 let duplicate = false;
 
 var failedWrite = fs.createWriteStream(failedFolder, {                              //create write stream and write function for failed links, a=append
