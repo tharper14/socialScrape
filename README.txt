@@ -3,7 +3,7 @@
 
 2. Open terminal within VS Code > View > Terminal
 
-3. Make sure node is installed > “node -v” (should say v##.##.#)
+3. Make sure node is installed > “node -v” (should say v##.##.#) (really just for first time setup to make sure node is up and running properly)
 
 4. Look in index.js file and update username and make sure the filepaths for masterLogPath and
    and chatScrapePath are correct based on your machine (make sure path to DropBox matches) 
