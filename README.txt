@@ -38,9 +38,9 @@ Encoder_______________________
 if you have videos on hand that you just want to batch run through the encoder, it is now located in the utilities folder..
 (.../socialScrape/utilities/handbrake)
 
-1. Navigate to the handbrake folder by going inside VS Code and clicking file > Open Folder and find the handbrake folder or 
+1. Navigate to the handbrake folder (in VS code, not finder) > file > Open Folder and find the handbrake folder or 
    using the command line/terminal >> "cd utilities"(enter) and then "cd handbrake"(enter)
-   	>>the terminal window should be working out of the handbrake folder
+   	>>the terminal window should be working out of the handbrake folder (username@Users-MBP hanbrake %_)
    
 2. Put the videos you wish to encode into the "_inputVideos" folder
 
