@@ -13,13 +13,13 @@
 const yourUsername = 'tylerharper';
 const dropBoxFolder = '_socialScrape'
 const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
-const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrape.txt`
+const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
 //---------------------------------------------------------------------
 let addChatLinks = false
 //TURN ON/OFF adding ChatScrape Links to list -> false does not check/add links from chatScrape.txt
-let checkLog = false   
+let checkLog = true   
 //TURN ON/OFF checking against successLog -> false will download videos no matter what
-let addLog = false  
+let addLog = true  
 //TURN ON/OFF adding successful downloads to successLog -> false will not keep record of successful links
 
 //---------------------------------------------------------------------
