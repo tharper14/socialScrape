@@ -36,7 +36,7 @@
 
 Encoder_______________________
 if you have videos on hand that you just want to batch run through the encoder, it is now located in the utilities folder..
-(.../socialScrape/utilities/handbrake)
+(.../socialScrape-main/utilities/handbrake)
 
 1. Navigate to the handbrake folder (in VS code, not finder)
 Open VS Code, click on “Explorer” on top left pane and locate the handbrke folder (socialScrape-main/utilities/handbrake) 
