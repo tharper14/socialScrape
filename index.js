@@ -15,7 +15,7 @@ const dropBoxFolder = '_socialScrape'
 const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
 const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
 //---------------------------------------------------------------------
-let addChatLinks = false
+let addChatLinks = true
 //TURN ON/OFF adding ChatScrape Links to list -> false does not check/add links from chatScrape.txt
 let checkLog = true   
 //TURN ON/OFF checking against successLog -> false will download videos no matter what
@@ -66,6 +66,12 @@ let downloadFlag = false;
 let stripFlag = false;
 let completeFileName = ''
 let duplicate = false;
+
+//encoder quality options
+const veryFast = 'Very Fast 1080p30'
+const fast = 'Fast 1080p30'
+const hq = 'HQ 1080p30 Surround'
+const superHQ = 'Super HQ 1080p30 Surround'
 
 var failedWrite = fs.createWriteStream(failedFolder, {                              //create write stream and write function for failed links, a=append
     flags: 'a'})
@@ -273,7 +279,7 @@ async function stripDownload(linksPath) {
                     let options = {
                         input: `${downloadFolder}/${completeFileName}`,
                         output: `${encodedFolder}/${completeFileName}`,
-                        preset: 'HQ 1080p30 Surround'};
+                        preset: superHQ};
 
                     try  {
                         let result = await hbjs.run(options)
@@ -389,7 +395,7 @@ async function stripDownload(linksPath) {
                     let options = {
                         input: `${downloadFolder}/${completeFileName}`,
                         output: `${encodedFolder}/${completeFileName}`,
-                        preset: 'Fast 1080p30'};
+                        preset: superHQ};
 
                     try  {
                         let result = await hbjs.run(options)
