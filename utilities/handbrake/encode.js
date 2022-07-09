@@ -6,6 +6,11 @@ const inputFolder = './_inputVideos';
 const outputFolder = './_encodedOutput';
 let currentFile ='';
 
+const veryFast = 'Very Fast 1080p30'
+const fast = 'Fast 1080p30'
+const hq = 'HQ 1080p30 Surround'
+const superHQ = 'Super HQ 1080p30 Surround'
+
 fs.readdirSync(inputFolder).forEach(file => {
 
   //console.log(file);
@@ -22,7 +27,7 @@ async function manualEncoder() {
         let options = {
             input: `${inputFolder}/${currentFile}`,
             output: `${outputFolder}/${currentFile}`,
-            preset: 'Fast 1080p30'};
+            preset: superHQ};
 
         try  {
             let result = await hbjs.run(options)
