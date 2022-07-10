@@ -13,7 +13,13 @@
 const yourUsername = 'tylerharper';
 const dropBoxFolder = '_socialScrape'
 const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
-const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrape.txt`
+const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
+const logPath = `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatLog.txt`
+const missedLinkPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinks.txt`
+const missedLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinksLog.txt`
+
+
+
 //---------------------------------------------------------------------
 let addChatLinks = false
 //TURN ON/OFF adding ChatScrape Links to list -> false does not check/add links from chatScrape.txt
@@ -21,7 +27,7 @@ let checkLog = false
 //TURN ON/OFF checking against successLog -> false will download videos no matter what
 let addLog = false  
 //TURN ON/OFF adding successful downloads to successLog -> false will not keep record of successful links
-
+let pullChatDb = true
 //---------------------------------------------------------------------
 
 const linksList = "./links.txt"
@@ -29,6 +35,8 @@ const downloadFolder = './utilities/stripDownloads'
 const encodedFolder ='./_finalDownloads' 
 const failedFolder = './utilities/failedLinks.txt'
 
+const ttOnlyChatID = '679112890556703100';
+const dateFromChatLinks = '679112890556703100';
 
 //---------------------------------------------------------------------
 
@@ -43,7 +51,10 @@ const {readFileSync, promises: fsPromises} = require('fs');
 const instagram = require('user-instagram');
 const hbjs = require('handbrake-js')
 const FileProcessorHH = require('./utilities/fileProcessorHH');
+const GetChat = require('./utilities/getchat');
 var colors = require('colors');
+const imessage = require('osa-imessage')
+
 
 //let completedDownloads = []
 let failedShorten = []
@@ -67,7 +78,14 @@ let stripFlag = false;
 let completeFileName = ''
 let duplicate = false;
 
-var failedWrite = fs.createWriteStream(failedFolder, {                              //create write stream and write function for failed links, a=append
+//encoder quality options
+const veryFast = 'Very Fast 1080p30'
+const fast = 'Fast 1080p30'
+const hq = 'HQ 1080p30 Surround'
+const superHQ = 'Super HQ 1080p30 Surround';
+
+//create write stream and write function for failed links, a=append
+var failedWrite = fs.createWriteStream(failedFolder, {    
     flags: 'a'})
 var writeFailed = (line) => failedWrite.write(`\n${line}`);                                
 
@@ -80,6 +98,22 @@ var writeSuccessLog = (line) => successLog.write(`\n${line}`);
 
 //---------------------------------------------------------------------
 //---------------------------------MAIN LOOP---------------------------
+
+if (pullChatDb){
+   try{
+    getChat.chatScrape(chatScrapePath, logPath, masterLogPath, missedLinkPath, missedLogPath, ttOnlyChatID, dateFromChatLinks )
+   } catch {
+    console.log("chatScrape dB Failed...")
+   }
+}
+
+
+    
+  
+    
+    
+    
+    
 
 
 //add chat links to file.txt, to turn off, set addChatLinks to false;
@@ -138,7 +172,6 @@ stripDownload(linksList); //main process
 
 //MAIN FUNCTION
 async function stripDownload(linksPath) { 
-    
     let fileByLine = textToArray(linksPath)
     
     // let textByLine = textToArray(linksPath)
@@ -273,7 +306,7 @@ async function stripDownload(linksPath) {
                     let options = {
                         input: `${downloadFolder}/${completeFileName}`,
                         output: `${encodedFolder}/${completeFileName}`,
-                        preset: 'HQ 1080p30 Surround'};
+                        preset: superHQ};
 
                     try  {
                         let result = await hbjs.run(options)
@@ -389,7 +422,7 @@ async function stripDownload(linksPath) {
                     let options = {
                         input: `${downloadFolder}/${completeFileName}`,
                         output: `${encodedFolder}/${completeFileName}`,
-                        preset: 'Fast 1080p30'};
+                        preset: superHQ};
 
                     try  {
                         let result = await hbjs.run(options)

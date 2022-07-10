@@ -16,8 +16,7 @@
     "handbrake-js": "^6.0.0",
     "nodejs-file-downloader": "github:tharper14/nodejs-file-downloader",
     "osa-imessage": "^2.4.2",
-    "replace-in-file": "^6.3.5",
-    "sqlite3": "^4.2.0",
+    "replace-in-file": "github:tharper14/osa-imessage-socialScrape",
     "tiktok-scraper-without-watermark": "github:tharper14/Tiktok-Scraper-Without-Watermark",
     "unshorten.it": "^1.0.0",
     "user-instagram": "^3.0.1"
