@@ -1,3 +1,25 @@
+7/10/22 10:42 
+Updates:
+
+-checks against New Clips folder when file naming -appends correct number for clips from previous user/filename
+
+-saves final encoded download to New Clips folder, no longer needs to drag over. You can override this by setting line 17 localDL=true 
+
+-auto changes usernames starting with ‘.’ to (dot). (Anything starting with . is hidden lol)
+
+-deletes the in between downloaded file (stripped download that is the input of the encoder) after successful encoded. Can be turned off by setting line 38 deleteStripDownload = false
+
+-upgraded both handbrakes (main and manual) to superHQ. This will make files larger and take longer to encode/download. Can be switched back easily 
+I didn’t get finished adding in the code to auto delete the chatScrape text file after each link gets fully downloaded successfully so that’s coming soon
+
+-if you want to run a test run so it doesn't touch any of our official documentation, just set test = true on line 16, everything will be ran through
+Tylers Test folder with similar setup, log files, and a mimic New Clips Folder. 
+
+I would keep the tool you currently have in a different place until we make sure it’s bug free
+
+//_________________________________________________________________________________________
+
+
 1. Open VS Code, click on “Explorer” on top left pane and locate the socialScrape folder 
    (ideally throw it in your home directory > /users/tylerharper for me)
 
