@@ -11,31 +11,55 @@
 //_______________________________________________________________________________________________
 
 const yourUsername = 'tylerharper';
-const dropBoxFolder = '_socialScrape'
-const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
-const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
-const logPath = `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatLog.txt`
-const missedLinkPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinks.txt`
-const missedLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinksLog.txt`
+let dropBoxFolder = '_socialScrape'
+
+const test = false;
 
 
+let masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
+let chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
+//let encodedFolder = `/Users/${yourUsername}/Social Wake Dropbox/New Clips`
+let encodedFolder = './_finalDownloads';
+let logPath = `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatLog.txt`
+let missedLinkPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinks.txt`
+let missedLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinksLog.txt`
 
 //---------------------------------------------------------------------
-let addChatLinks = false
+let addChatLinks = true
 //TURN ON/OFF adding ChatScrape Links to list -> false does not check/add links from chatScrape.txt
-let checkLog = false   
+let checkLog = true   
 //TURN ON/OFF checking against successLog -> false will download videos no matter what
-let addLog = false  
+let addLog = true  
 //TURN ON/OFF adding successful downloads to successLog -> false will not keep record of successful links
-let pullChatDb = true
+let pullChatDb = false;
+//DELETE stripped download after successful encoding -> true
+const deleteStripDownload = true; 
 //---------------------------------------------------------------------
+if (test == true)  //dont need to change a bunch of filepaths for running tests, just change test to t/f
+{
+    dropBoxFolder = 'Social Scrape';
+    encodedFolder =`/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/New Clips`;
+   // newClips = `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/New Clips`;
+   // addChatLinks = false
+    //checkLog = false
+    //addLog = false;
 
+     masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
+     chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
+     newClips = `/Users/${yourUsername}/Social Wake Dropbox/New Clips`
+     logPath = `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatLog.txt`
+     missedLinkPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinks.txt`
+     missedLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinksLog.txt`  
+     console.log(masterLogPath);
+}
+
+console.log(encodedFolder)
+//Don't Change these
 const linksList = "./links.txt"
 const downloadFolder = './utilities/stripDownloads'    
-const encodedFolder ='./_finalDownloads' 
 const failedFolder = './utilities/failedLinks.txt'
 
-const ttOnlyChatID = '679112890556703100';
+const ttOnlyChatID = "'chat652293730519823796'";
 const dateFromChatLinks = '679112890556703100';
 
 //---------------------------------------------------------------------
@@ -98,15 +122,17 @@ var writeSuccessLog = (line) => successLog.write(`\n${line}`);
 
 //---------------------------------------------------------------------
 //---------------------------------MAIN LOOP---------------------------
+// async function searchChat(pullChatDb, chatScrapePath, logPath, masterLogPath, missedLinkPath, missedLogPath, ttOnlyChatID, dateFromChatLinks) {
+// if (pullChatDb){
+//     try{
+//      let snag = await GetChat.chatScrape(chatScrapePath, logPath, masterLogPath, missedLinkPath, missedLogPath, null, dateFromChatLinks)
+//     } catch {
+//      console.log("chatScrape dB Failed...")
+//     }
+//  }
 
-if (pullChatDb){
-   try{
-    getChat.chatScrape(chatScrapePath, logPath, masterLogPath, missedLinkPath, missedLogPath, ttOnlyChatID, dateFromChatLinks )
-   } catch {
-    console.log("chatScrape dB Failed...")
-   }
-}
-
+// }
+// searchChat(pullChatDb, chatScrapePath, logPath, masterLogPath, missedLinkPath, missedLogPath, null, dateFromChatLinks);
 
     
   
@@ -162,6 +188,8 @@ if (addChatLinks){
         console.log(`Link(s) #${addedFromChatScrape.toString()} added from chatScrape\n`.green)
     }
 }
+
+
 stripDownload(linksList); //main process
 
 
@@ -237,10 +265,13 @@ async function stripDownload(linksPath) {
                 else {
                     username = "undefined"
                 }
-
+                if (username.charAt(0) == '.')
+                {
+                     username = username.replaceAt(0, "(dot)");  //if username starts with '.' replace with (dot)
+                }
 
           //FileProcessor____________________________________________________________________
-                var fileProcessorHH = new FileProcessorHH({fileName: username + '.mp4', path: downloadFolder});
+                var fileProcessorHH = new FileProcessorHH({fileName: username + '.mp4', path: encodedFolder});
                 try{
                         completeFileName = await fileProcessorHH.getAvailableFileName();
                      console.log(completeFileName)
@@ -317,6 +348,10 @@ async function stripDownload(linksPath) {
                         if(addLog)
                         {
                         writeSuccessLog(url);}
+                        if (deleteStripDownload)
+                        {
+                            deleteFile(downloadFolder+"/"+completeFileName)
+                        }
 
                     }  catch {
                         console.log("Encoding #" +i+ " FAILED!!".red)
@@ -507,7 +542,23 @@ function textToArray(path) {
     return textByLine;
 }
 
+String.prototype.replaceAt = function (index, char) {       //function to replace character in string
+    let a = this.split("");
+    a[index] = char;
+    return a.join("");
+  }
 
+
+ function deleteFile(path) {
+    try {
+    fs.unlinkSync(path)
+        //console.log("raw download deleted")
+    }
+    catch{
+        console.log(`ERROR: ${path} was not deleted!`)
+    }
+
+  }
 
 
 // █░█ ▄▀█ █▀█ █▀█ █▀▀ █▀█ █▀ █░█ ▄▀█ █▀▀ █▄▀ █▀

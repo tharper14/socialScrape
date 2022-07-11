@@ -21,7 +21,7 @@ async function chatScrape(linkPath, logPath, completedPath, missedLinkPath, miss
     var writeMissedChatLinks = (line) => missedChatLinks.write(`\n${line}`);
 
    // try {    
-    let chats = imessage.getRecentChats(100, chatID, dateFromChatLinks);
+    let chats = imessage.getRecentChats(1000);
    // } catch {
       //  console.log("Error retreiving chat links")
   //  }
@@ -39,20 +39,19 @@ async function chatScrape(linkPath, logPath, completedPath, missedLinkPath, miss
                     second: '2-digit',
                     /* timeStyle: 'full'*/ })
         if (checkIfContainsSync(completedPath, chats[i].text) == false 
-                && checkIfContainsSync(linkPath, chats[i].text) == false
-                && chats[i].text != anamoly1 && chats[i].text != anamoly2) //if link[i] is not in completedLog AND not pulled from chat -if not loaded for next run (in chatScrapeLinks.txt)
+                && checkIfContainsSync(linkPath, chats[i].text) == false) //if link[i] is not in completedLog AND not pulled from chat -if not loaded for next run (in chatScrapeLinks.txt)
             {
                 
-                writeLink(chats[i].text);  //write link to chatScrapeLinks.txt
+               // writeLink(chats[i].text);  //write link to chatScrapeLinks.txt
                 //console.log(chats[i].text)
-                writeMissedChatLinks(`${chats[i].text}`);  //just a second source for troubleshooting, meant to be deleted everytime?
+                //writeMissedChatLinks(`${chats[i].text}`);  //just a second source for troubleshooting, meant to be deleted everytime?
                 console.log(`${shortDate}, ${chats[i].text}, ${chats[i].handle}`)
                 //console.log(chats[i].text)
 
             }
-            if (checkIfContainsSync(logPath, chats[i].text) ==false && chats[i].text != anamoly1 && chats[i].text != anamoly2 && chats[i].text != null ) //if chatlog doesnt contain the link or these two wierd texts that keep popping up -quick fix
+            if (checkIfContainsSync(logPath, chats[i].text) ==false && chats[i].text != null ) //if chatlog doesnt contain the link or these two wierd texts that keep popping up -quick fix
             {
-                writeChatLog(`${shortDate}, ${chats[i].text}, ${chats[i].handle}`); //if not not logged, log it (chatLog.txt)
+                //writeChatLog(`${shortDate}, ${chats[i].text}, ${chats[i].handle}`); //if not not logged, log it (chatLog.txt)
                 writeMissedChatLog(`${shortDate}, ${chats[i].text}, ${chats[i].handle}`); //if not not logged, log it (missedChatLog.txt)
                 
             } 

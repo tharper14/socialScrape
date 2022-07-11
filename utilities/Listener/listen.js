@@ -13,10 +13,10 @@ imessage.listen().on("message", (msg) => {
 
     // if (msg.group.indexOf("chat901667219280557236") !== -1) {
 
-        if (msg.text.indexOf("tiktok.com") !== -1) {
+         //if (msg.text.indexOf("tiktok.com") !== -1) {
             writeLine(msg.text);
 
-        }
+         //}
     // }
   });
 
