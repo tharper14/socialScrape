@@ -40,7 +40,7 @@ const deleteStripDownload = true;
 
 if (test == true)  //dont need to change a bunch of filepaths for running tests, just change test to t/f
 {
-    dropBoxFolder = 'Social Scrape';
+    dropBoxFolder = 'Tylers Tests';
     encodedFolder =`/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/New Clips`;
     masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
     chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
