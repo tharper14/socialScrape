@@ -11,25 +11,58 @@
 //_______________________________________________________________________________________________
 
 const yourUsername = 'tylerharper';
-const dropBoxFolder = '_socialScrape'
-const masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
-const chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
+let dropBoxFolder = '_socialScrape'
+
+const test = false;
+const localDL = false;
+
+
+let masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
+let chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
+let encodedFolder = `/Users/${yourUsername}/Social Wake Dropbox/New Clips`
+
+let logPath = `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatLog.txt`
+let missedLinkPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinks.txt`
+let missedLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinksLog.txt`
+
 //---------------------------------------------------------------------
-let addChatLinks = true
 //TURN ON/OFF adding ChatScrape Links to list -> false does not check/add links from chatScrape.txt
-let checkLog = true   
+let addChatLinks = true
 //TURN ON/OFF checking against successLog -> false will download videos no matter what
-let addLog = true  
+let checkLog = true   
 //TURN ON/OFF adding successful downloads to successLog -> false will not keep record of successful links
-
+let addLog = true  
+// Run GetRecent: grab/look for missed links -in progress
+let pullChatDb = false;
+//DELETE stripped download after successful encoding -> true
+const deleteStripDownload = true; 
 //---------------------------------------------------------------------
 
+if (test == true)  //dont need to change a bunch of filepaths for running tests, just change test to t/f
+{
+    dropBoxFolder = 'Social Scrape';
+    encodedFolder =`/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/New Clips`;
+    masterLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/masterCompletedLog.txt`
+    chatScrapePath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatScrapeLinks.txt`
+    newClips = `/Users/${yourUsername}/Social Wake Dropbox/New Clips`
+    logPath = `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/chatLog.txt`
+    missedLinkPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinks.txt`
+    missedLogPath =  `/Users/${yourUsername}/Social Wake Dropbox/${dropBoxFolder}/logs/missedLinksLog.txt`  
+}
+
+if (localDL == true)
+{
+    encodedFolder = './_finalDownloads';
+}
+
+//Don't Change these
 const linksList = "./links.txt"
 const downloadFolder = './utilities/stripDownloads'    
-const encodedFolder ='./_finalDownloads' 
 const failedFolder = './utilities/failedLinks.txt'
 
-
+const ttOnlyChatID = "'chat652293730519823796'";
+const igChatID = "'chat222048912579693603'"
+const dateFromChatLinks = '679112890556703100';
 //---------------------------------------------------------------------
 
 
@@ -210,10 +243,13 @@ async function stripDownload(linksPath) {
                 else {
                     username = "undefined"
                 }
-
+                if (username.charAt(0) == '.')
+                {
+                     username = username.replaceAt(0, "(dot)");  //if username starts with '.' replace with (dot)
+                }
 
           //FileProcessor____________________________________________________________________
-                var fileProcessorHH = new FileProcessorHH({fileName: username + '.mp4', path: downloadFolder});
+                var fileProcessorHH = new FileProcessorHH({fileName: username + '.mp4', path: encodedFolder});
                 try{
                         completeFileName = await fileProcessorHH.getAvailableFileName();
                      console.log(completeFileName)
@@ -287,9 +323,12 @@ async function stripDownload(linksPath) {
                         //checkAndAdd(masterLogPath, url)
                         downloadFlag = false;
                         //console.log(result)
-                        if(addLog)
+                        if(addLog){
+                            writeSuccessLog(url);}
+                        if (deleteStripDownload)
                         {
-                        writeSuccessLog(url);}
+                            deleteFile(downloadFolder+"/"+completeFileName)
+                        }
 
                     }  catch {
                         console.log("Encoding #" +i+ " FAILED!!".red)
@@ -332,7 +371,7 @@ async function stripDownload(linksPath) {
             //console.log(url)
 
           //FileProcessor Retry____________________________________________________________________
-           var fileProcessorHH = new FileProcessorHH({fileName: failedLinks[j].usr + '.mp4', path: downloadFolder});
+           var fileProcessorHH = new FileProcessorHH({fileName: failedLinks[j].usr + '.mp4', path: encodedFolder});
               try{
                  completeFileName = await fileProcessorHH.getAvailableFileName();
               // console.log(completeFileName)
@@ -480,6 +519,23 @@ function textToArray(path) {
     return textByLine;
 }
 
+String.prototype.replaceAt = function (index, char) {       //function to replace character in string
+    let a = this.split("");
+    a[index] = char;
+    return a.join("");
+  }
+
+
+ function deleteFile(path) {
+    try {
+    fs.unlinkSync(path)
+        //console.log("raw download deleted")
+    }
+    catch{
+        console.log(`ERROR: ${path} was not deleted!`)
+    }
+
+  }
 
 
 
